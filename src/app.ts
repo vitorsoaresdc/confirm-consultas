@@ -24,12 +24,12 @@ app.get('/health', (req, res) => {
 app.use('/api', routes);
 
 // Servir arquivos estáticos do frontend (após o build)
-// Em produção: /opt/render/project/src/dist -> /opt/render/project/frontend/dist
-// Em dev: /Users/.../confirm-consultas/dist -> /Users/.../confirm-consultas/frontend/dist
-const frontendPath = path.resolve(__dirname, '..', 'frontend', 'dist');
+// Usa process.cwd() que sempre aponta para a raiz do projeto
+const frontendPath = path.join(process.cwd(), 'frontend', 'dist');
 const indexPath = path.join(frontendPath, 'index.html');
 
 // Log do caminho para debug
+console.log('📁 process.cwd():', process.cwd());
 console.log('📁 __dirname:', __dirname);
 console.log('📁 Frontend path:', frontendPath);
 console.log('📁 Index.html path:', indexPath);
@@ -50,7 +50,9 @@ app.get('*', (req, res) => {
     res.status(404).json({
       success: false,
       error: 'Frontend não encontrado',
-      path: frontendPath
+      path: frontendPath,
+      cwd: process.cwd(),
+      dirname: __dirname
     });
   }
 });
