@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync } from 'fs';
 import routes from './routes/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,12 +24,35 @@ app.get('/health', (req, res) => {
 app.use('/api', routes);
 
 // Servir arquivos estáticos do frontend (após o build)
-const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
-app.use(express.static(frontendPath));
+// Em produção: /opt/render/project/src/dist -> /opt/render/project/frontend/dist
+// Em dev: /Users/.../confirm-consultas/dist -> /Users/.../confirm-consultas/frontend/dist
+const frontendPath = path.resolve(__dirname, '..', 'frontend', 'dist');
+const indexPath = path.join(frontendPath, 'index.html');
+
+// Log do caminho para debug
+console.log('📁 __dirname:', __dirname);
+console.log('📁 Frontend path:', frontendPath);
+console.log('📁 Index.html path:', indexPath);
+console.log('📁 Index.html exists:', existsSync(indexPath));
+
+if (existsSync(frontendPath)) {
+  app.use(express.static(frontendPath));
+  console.log('✅ Servindo frontend estático de:', frontendPath);
+} else {
+  console.warn('⚠️ Frontend dist não encontrado em:', frontendPath);
+}
 
 // Todas as outras rotas retornam o index.html do React (SPA routing)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+  if (existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).json({
+      success: false,
+      error: 'Frontend não encontrado',
+      path: frontendPath
+    });
+  }
 });
 
 export default app;
