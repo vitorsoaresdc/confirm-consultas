@@ -17,14 +17,12 @@ app.get('/health', (req, res) => {
 // API routes (prefixadas com /api)
 app.use('/api', routes);
 // Servir arquivos estáticos do frontend (após o build)
-// Em produção: /opt/render/project/src/dist -> /opt/render/project/frontend/dist
-// Em dev: /Users/.../confirm-consultas/dist -> /Users/.../confirm-consultas/frontend/dist
-const frontendPath = path.resolve(__dirname, '..', 'frontend', 'dist');
+// Frontend é copiado para dist/public/ durante o build
+const frontendPath = path.join(__dirname, 'public');
 const indexPath = path.join(frontendPath, 'index.html');
 // Log do caminho para debug
 console.log('📁 __dirname:', __dirname);
 console.log('📁 Frontend path:', frontendPath);
-console.log('📁 Index.html path:', indexPath);
 console.log('📁 Index.html exists:', existsSync(indexPath));
 if (existsSync(frontendPath)) {
     app.use(express.static(frontendPath));
@@ -42,7 +40,9 @@ app.get('*', (req, res) => {
         res.status(404).json({
             success: false,
             error: 'Frontend não encontrado',
-            path: frontendPath
+            frontendPath: frontendPath,
+            dirname: __dirname,
+            indexExists: existsSync(indexPath)
         });
     }
 });

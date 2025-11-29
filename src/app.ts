@@ -24,34 +24,20 @@ app.get('/health', (req, res) => {
 app.use('/api', routes);
 
 // Servir arquivos estáticos do frontend (após o build)
-// Detecta automaticamente o caminho correto do frontend
-let frontendPath: string;
-
-// Tenta múltiplos caminhos possíveis
-const possiblePaths = [
-  path.join(process.cwd(), 'frontend', 'dist'),           // Caminho normal
-  path.join(__dirname, '..', 'frontend', 'dist'),         // Relativo ao dist/
-  path.join(__dirname, '..', '..', 'frontend', 'dist'),   // Dois níveis acima
-  path.join(process.cwd(), '..', 'frontend', 'dist'),     // Um nível acima do cwd
-];
-
-// Encontra o primeiro caminho que existe
-frontendPath = possiblePaths.find(p => existsSync(path.join(p, 'index.html'))) || possiblePaths[0];
+// Frontend é copiado para dist/public/ durante o build
+const frontendPath = path.join(__dirname, 'public');
 const indexPath = path.join(frontendPath, 'index.html');
 
 // Log do caminho para debug
-console.log('📁 process.cwd():', process.cwd());
 console.log('📁 __dirname:', __dirname);
-console.log('📁 Caminhos testados:', possiblePaths);
-console.log('📁 Frontend path escolhido:', frontendPath);
-console.log('📁 Index.html path:', indexPath);
+console.log('📁 Frontend path:', frontendPath);
 console.log('📁 Index.html exists:', existsSync(indexPath));
 
 if (existsSync(frontendPath)) {
   app.use(express.static(frontendPath));
   console.log('✅ Servindo frontend estático de:', frontendPath);
 } else {
-  console.warn('⚠️ Frontend dist não encontrado em nenhum dos caminhos testados');
+  console.warn('⚠️ Frontend dist não encontrado em:', frontendPath);
 }
 
 // Todas as outras rotas retornam o index.html do React (SPA routing)
@@ -62,10 +48,8 @@ app.get('*', (req, res) => {
     res.status(404).json({
       success: false,
       error: 'Frontend não encontrado',
-      cwd: process.cwd(),
+      frontendPath: frontendPath,
       dirname: __dirname,
-      possiblePaths: possiblePaths,
-      chosenPath: frontendPath,
       indexExists: existsSync(indexPath)
     });
   }
