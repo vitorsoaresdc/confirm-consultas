@@ -69,3 +69,28 @@ export async function getPacienteByTelefone(telefone: string): Promise<Paciente 
   return data;
 }
 
+export async function updatePaciente(id: string, data: Partial<CreatePacienteDTO>): Promise<Paciente> {
+  const { data: paciente, error } = await supabase
+    .from('pacientes')
+    .update(data)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao atualizar paciente: ${error.message}`);
+  }
+
+  return paciente;
+}
+
+export async function deletePaciente(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('pacientes')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Erro ao deletar paciente: ${error.message}`);
+  }
+}

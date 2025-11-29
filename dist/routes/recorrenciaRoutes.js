@@ -5,4 +5,6 @@ const recorrenciaController_1 = require("../controllers/recorrenciaController");
 const router = (0, express_1.Router)();
 router.post('/', recorrenciaController_1.criarRecorrencia);
 router.get('/', recorrenciaController_1.listarRecorrencias);
+router.put('/:id', recorrenciaController_1.atualizarRecorrencia);
+router.delete('/:id', recorrenciaController_1.excluirRecorrencia);
 exports.default = router;

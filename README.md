@@ -1,285 +1,135 @@
 # Sistema de Confirmação de Consultas
 
-Sistema completo em TypeScript para gerenciar consultas psicológicas recorrentes e enviar confirmações automáticas via WhatsApp usando a API Whappi.
+Sistema completo de agendamento e confirmação de consultas via WhatsApp.
 
-## 🚀 Tecnologias
+## Stack
 
-- **Node.js** + **TypeScript**
-- **Express** - Framework web
-- **Supabase** - Banco de dados PostgreSQL
-- **node-cron** - Agendamento de tarefas
-- **Whappi API** - Integração WhatsApp
-- **Zod** - Validação de dados
-- **Axios** - Requisições HTTP
+- **Backend**: Node.js + TypeScript + Express
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Jobs**: node-cron
+- **WhatsApp**: Whappi API
 
-## 📁 Estrutura do Projeto
-
-```
-src/
-├── config/
-│   ├── supabase.ts          # Configuração do Supabase
-│   └── whappi.ts            # Configuração da API Whappi
-├── controllers/
-│   ├── consultaController.ts
-│   ├── pacienteController.ts
-│   ├── recorrenciaController.ts
-│   └── webhookController.ts
-├── services/
-│   ├── consultaService.ts
-│   ├── pacienteService.ts
-│   ├── recorrenciaService.ts
-│   └── whatsappService.ts
-├── jobs/
-│   ├── enviarConfirmacoesJob.ts          # Executa a cada 5 minutos
-│   └── gerarConsultasRecorrentesJob.ts   # Executa 1x por dia
-├── routes/
-│   ├── consultaRoutes.ts
-│   ├── pacienteRoutes.ts
-│   ├── recorrenciaRoutes.ts
-│   ├── webhookRoutes.ts
-│   └── index.ts
-├── types/
-│   └── global.d.ts          # Tipos TypeScript
-├── utils/
-│   └── dateUtils.ts         # Funções utilitárias de data
-├── app.ts                   # Configuração do Express
-└── server.ts                # Inicialização do servidor
-```
-
-## 🗄️ Configuração do Banco de Dados
-
-### 1. Criar Tabelas no Supabase
-
-Execute o SQL contido em `database.sql` no Supabase Dashboard:
-
-1. Acesse o [Supabase Dashboard](https://app.supabase.com)
-2. Selecione seu projeto
-3. Vá em **SQL Editor**
-4. Cole o conteúdo de `database.sql`
-5. Execute o script
-
-### 2. Estrutura das Tabelas
-
-**pacientes**
-- `id` (UUID) - PK
-- `nome` (TEXT)
-- `telefone` (TEXT) - formato +55DDDXXXXXXXXX
-- `ativo` (BOOLEAN)
-- `created_at` (TIMESTAMP)
-
-**recorrencias**
-- `id` (UUID) - PK
-- `paciente_id` (UUID) - FK → pacientes.id
-- `dia_semana` (INTEGER) - 0=domingo, 1=segunda...
-- `hora` (TEXT) - formato "HH:MM"
-- `tipo` (TEXT) - semanal | quinzenal | mensal
-- `proxima_consulta` (TIMESTAMP)
-- `ativo` (BOOLEAN)
-- `created_at` (TIMESTAMP)
-
-**consultas**
-- `id` (UUID) - PK
-- `paciente_id` (UUID) - FK → pacientes.id
-- `data_hora` (TIMESTAMP)
-- `status` (TEXT) - pendente | enviada | confirmada | cancelada
-- `created_at` (TIMESTAMP)
-
-## ⚙️ Configuração
-
-### 1. Instalar Dependências
+## Início Rápido
 
 ```bash
+# 1. Instalar dependências
 npm install
+cd frontend && npm install && cd ..
+
+# 2. Configurar banco de dados
+# Execute database.sql no Supabase Dashboard
+
+# 3. Iniciar sistema
+npm run dev                    # Backend (porta 3000)
+cd frontend && npm run dev     # Frontend (porta 5173)
 ```
 
-### 2. Configurar Variáveis de Ambiente
+## Acesso
 
-Já está configurado no arquivo `.env`:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3000
+- **Senha**: `psicologa123`
+
+## Estrutura
+
+```
+confirm-consultas/
+├── src/                    # Backend
+│   ├── config/            # Configurações (Supabase, WhatsApp)
+│   ├── controllers/       # Controladores REST
+│   ├── services/          # Lógica de negócio
+│   ├── jobs/              # Jobs automáticos
+│   ├── routes/            # Rotas Express
+│   ├── types/             # Tipos TypeScript
+│   └── utils/             # Utilitários
+│
+└── frontend/              # Dashboard Web
+    └── src/
+        ├── components/    # Login + Dashboard
+        └── services/      # API client
+
+```
+
+## Funcionalidades
+
+### Backend (API REST)
+- ✅ CRUD completo de Pacientes
+- ✅ CRUD completo de Recorrências
+- ✅ Listagem de Consultas
+- ✅ Webhook WhatsApp
+- ✅ Jobs automáticos (gerar consultas, enviar mensagens)
+- ✅ Validações com Zod
+- ✅ CORS habilitado
+
+### Frontend (Dashboard)
+- ✅ Login com autenticação
+- ✅ Dashboard com estatísticas
+- ✅ Gerenciamento de pacientes (criar, editar, excluir, buscar)
+- ✅ Gerenciamento de recorrências (criar, editar, excluir)
+- ✅ Visualização de consultas com status
+- ✅ Design moderno e responsivo
+
+## Endpoints
+
+```
+POST   /pacientes          - Criar paciente
+GET    /pacientes          - Listar pacientes
+PUT    /pacientes/:id      - Atualizar paciente
+DELETE /pacientes/:id      - Excluir paciente
+
+POST   /recorrencias       - Criar recorrência
+GET    /recorrencias       - Listar recorrências
+PUT    /recorrencias/:id   - Atualizar recorrência
+DELETE /recorrencias/:id   - Excluir recorrência
+
+GET    /consultas          - Listar consultas
+PATCH  /consultas/:id/status - Atualizar status
+
+POST   /webhook/whatsapp   - Webhook do WhatsApp
+```
+
+## Jobs Automáticos
+
+### Gerar Consultas
+- **Frequência**: Diariamente às 00:05
+- **Função**: Cria consultas futuras baseadas nas recorrências ativas
+
+### Enviar Confirmações
+- **Frequência**: A cada 5 minutos
+- **Função**: Envia mensagens WhatsApp 3 horas antes da consulta
+
+## Scripts
+
+```bash
+# Backend
+npm run dev      # Desenvolvimento (hot reload)
+npm run build    # Build TypeScript
+npm start        # Produção
+
+# Frontend
+cd frontend
+npm run dev      # Desenvolvimento
+npm run build    # Build para produção
+```
+
+## Ambiente (.env)
 
 ```env
-SUPABASE_URL=https://eylxmqpqxfgmrluvfzku.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
 PORT=3000
 WHAPI_URL=https://gate.whapi.cloud/
-WHAPI_TOKEN=8TwtS2UKGt7Kf3ogR9nj1PCV9s1asZPa
+WHAPI_TOKEN=your_whapi_token
 ```
 
-### 3. Configurar Webhook no Whappi
+## Banco de Dados
 
-No painel do Whappi, configure o webhook para apontar para:
+Execute `database.sql` no Supabase para criar:
+- Tabela `pacientes`
+- Tabela `recorrencias`
+- Tabela `consultas`
+- Índices e constraints
 
-```
-POST https://seu-dominio.com/webhook/whatsapp
-```
-
-## 🏃 Executar o Projeto
-
-### Modo Desenvolvimento (com hot reload)
-
-```bash
-npm run dev
-```
-
-### Modo Produção
-
-```bash
-npm run build
-npm start
-```
-
-## 📡 Endpoints da API
-
-### Pacientes
-
-**Criar Paciente**
-```http
-POST /pacientes
-Content-Type: application/json
-
-{
-  "nome": "João Silva",
-  "telefone": "+5511987654321"
-}
-```
-
-**Listar Pacientes**
-```http
-GET /pacientes
-```
-
-### Recorrências
-
-**Criar Recorrência**
-```http
-POST /recorrencias
-Content-Type: application/json
-
-{
-  "paciente_id": "uuid-do-paciente",
-  "dia_semana": 1,
-  "hora": "16:00",
-  "tipo": "semanal",
-  "proxima_consulta": "2024-01-15T16:00:00Z"
-}
-```
-
-**Listar Recorrências**
-```http
-GET /recorrencias
-```
-
-### Consultas
-
-**Listar Consultas**
-```http
-GET /consultas
-```
-
-**Atualizar Status da Consulta**
-```http
-PATCH /consultas/:id/status
-Content-Type: application/json
-
-{
-  "status": "confirmada"
-}
-```
-
-### Webhook
-
-**Receber Mensagem do WhatsApp**
-```http
-POST /webhook/whatsapp
-```
-
-## 🤖 Regras Automatizadas
-
-### Job 1: Gerar Consultas Recorrentes
-- **Frequência**: 1x por dia (00:05)
-- **Função**: Lê todas as recorrências ativas e cria consultas futuras
-- **Atualização**: 
-  - Semanal → +7 dias
-  - Quinzenal → +14 dias
-  - Mensal → +1 mês
-
-### Job 2: Enviar Confirmações
-- **Frequência**: A cada 5 minutos
-- **Função**: Envia confirmação via WhatsApp 3 horas antes da consulta
-- **Mensagem**: 
-  ```
-  Olá, {nome}! Sua sessão com a Dra. será hoje às {hora}. 
-  Pode confirmar? Responda SIM ou NÃO.
-  ```
-
-### Processamento de Respostas
-
-O webhook processa as respostas dos pacientes:
-
-- **Confirmação**: "sim", "confirmo", "ok" → status = `confirmada`
-- **Cancelamento**: "não", "nao", "cancelar" → status = `cancelada` (notifica psicóloga via log)
-
-## 📝 Exemplos de Uso
-
-### 1. Cadastrar um Paciente
-
-```bash
-curl -X POST http://localhost:3000/pacientes \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "Maria Santos",
-    "telefone": "+5511999887766"
-  }'
-```
-
-### 2. Criar Recorrência Semanal
-
-```bash
-curl -X POST http://localhost:3000/recorrencias \
-  -H "Content-Type: application/json" \
-  -d '{
-    "paciente_id": "uuid-retornado-acima",
-    "dia_semana": 3,
-    "hora": "14:00",
-    "tipo": "semanal",
-    "proxima_consulta": "2024-01-17T14:00:00Z"
-  }'
-```
-
-### 3. Listar Consultas
-
-```bash
-curl http://localhost:3000/consultas
-```
-
-## 🔍 Logs e Monitoramento
-
-O sistema gera logs detalhados:
-
-```
-[Job] Verificando consultas para envio de confirmação...
-[Job] Encontradas 3 consultas pendentes
-[WhatsApp] Enviando mensagem para 5511999887766...
-[WhatsApp] Mensagem enviada com sucesso
-[Job] ✅ Confirmação enviada para Maria Santos
-[Webhook] ✅ Consulta uuid-123 CONFIRMADA por Maria Santos
-```
-
-## 🛠️ Troubleshooting
-
-### Erro: "Variáveis SUPABASE_URL e SUPABASE_KEY são obrigatórias"
-- Verifique se o arquivo `.env` existe e está configurado corretamente
-
-### Erro ao enviar WhatsApp
-- Verifique se o `WHAPI_TOKEN` está correto
-- Confirme que a instância do Whappi está ativa
-- Verifique se o número está no formato internacional (+55...)
-
-### Consultas não sendo geradas
-- Verifique se há recorrências ativas no banco
-- Confirme que `proxima_consulta` está no passado ou hoje
-- Aguarde até 00:05 para o job executar
-
-## 📄 Licença
-
-Projeto privado - Todos os direitos reservados.
+## Desenvolvido com 💜
 

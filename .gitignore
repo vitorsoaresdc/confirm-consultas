@@ -1,11 +1,36 @@
-/tmp
-/out-tsc
+# Dependencies
+node_modules/
+dist/
 
-/node_modules
+# Environment
+.env
+.env.local
+.env.production
+
+# Build
+build/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-/.pnp
-.pnp.js
 
-.vscode/*
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test
+coverage/
+
+# Misc
+*.tmp
+*.temp
+

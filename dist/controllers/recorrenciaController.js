@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.criarRecorrencia = criarRecorrencia;
 exports.listarRecorrencias = listarRecorrencias;
+exports.atualizarRecorrencia = atualizarRecorrencia;
+exports.excluirRecorrencia = excluirRecorrencia;
 const zod_1 = require("zod");
 const recorrenciaService_1 = require("../services/recorrenciaService");
 const createRecorrenciaSchema = zod_1.z.object({
@@ -54,6 +56,50 @@ function listarRecorrencias(req, res) {
             return res.status(200).json({
                 success: true,
                 data: recorrencias,
+            });
+        }
+        catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            });
+        }
+    });
+}
+function atualizarRecorrencia(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            const validatedData = createRecorrenciaSchema.parse(req.body);
+            const recorrencia = yield (0, recorrenciaService_1.updateRecorrencia)(id, validatedData);
+            return res.status(200).json({
+                success: true,
+                data: recorrencia,
+            });
+        }
+        catch (error) {
+            if (error instanceof zod_1.z.ZodError) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Dados inválidos',
+                    details: error.errors,
+                });
+            }
+            return res.status(500).json({
+                success: false,
+                error: error.message,
+            });
+        }
+    });
+}
+function excluirRecorrencia(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            yield (0, recorrenciaService_1.deleteRecorrencia)(id);
+            return res.status(200).json({
+                success: true,
+                message: 'Recorrência excluída com sucesso',
             });
         }
         catch (error) {

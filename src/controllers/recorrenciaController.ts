@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { createRecorrencia, getAllRecorrencias } from '../services/recorrenciaService';
+import { createRecorrencia, getAllRecorrencias, updateRecorrencia, deleteRecorrencia } from '../services/recorrenciaService';
 
 const createRecorrenciaSchema = z.object({
   paciente_id: z.string().uuid('ID do paciente deve ser um UUID válido'),
@@ -53,3 +53,43 @@ export async function listarRecorrencias(req: Request, res: Response) {
   }
 }
 
+export async function atualizarRecorrencia(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const validatedData = createRecorrenciaSchema.parse(req.body);
+    const recorrencia = await updateRecorrencia(id, validatedData);
+
+    return res.status(200).json({
+      success: true,
+      data: recorrencia,
+    });
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        error: 'Dados inválidos',
+        details: error.errors,
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+}
+
+export async function excluirRecorrencia(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    await deleteRecorrencia(id);
+    return res.status(200).json({
+      success: true,
+      message: 'Recorrência excluída com sucesso',
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+}

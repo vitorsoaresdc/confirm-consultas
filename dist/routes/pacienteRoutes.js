@@ -5,4 +5,6 @@ const pacienteController_1 = require("../controllers/pacienteController");
 const router = (0, express_1.Router)();
 router.post('/', pacienteController_1.criarPaciente);
 router.get('/', pacienteController_1.listarPacientes);
+router.put('/:id', pacienteController_1.atualizarPaciente);
+router.delete('/:id', pacienteController_1.excluirPaciente);
 exports.default = router;

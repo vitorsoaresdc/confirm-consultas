@@ -13,6 +13,8 @@ exports.createRecorrencia = createRecorrencia;
 exports.getAllRecorrencias = getAllRecorrencias;
 exports.getRecorrenciasAtivas = getRecorrenciasAtivas;
 exports.updateProximaConsulta = updateProximaConsulta;
+exports.updateRecorrencia = updateRecorrencia;
+exports.deleteRecorrencia = deleteRecorrencia;
 const supabase_1 = require("../config/supabase");
 const dateUtils_1 = require("../utils/dateUtils");
 function createRecorrencia(data) {
@@ -67,6 +69,31 @@ function updateProximaConsulta(recorrenciaId, novaData) {
             .eq('id', recorrenciaId);
         if (error) {
             throw new Error(`Erro ao atualizar próxima consulta: ${error.message}`);
+        }
+    });
+}
+function updateRecorrencia(id, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { data: recorrencia, error } = yield supabase_1.supabase
+            .from('recorrencias')
+            .update(data)
+            .eq('id', id)
+            .select()
+            .single();
+        if (error) {
+            throw new Error(`Erro ao atualizar recorrência: ${error.message}`);
+        }
+        return recorrencia;
+    });
+}
+function deleteRecorrencia(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { error } = yield supabase_1.supabase
+            .from('recorrencias')
+            .delete()
+            .eq('id', id);
+        if (error) {
+            throw new Error(`Erro ao deletar recorrência: ${error.message}`);
         }
     });
 }

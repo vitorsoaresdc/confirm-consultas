@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { criarPaciente, listarPacientes } from '../controllers/pacienteController';
+import { criarPaciente, listarPacientes, atualizarPaciente, excluirPaciente } from '../controllers/pacienteController';
 
 const router = Router();
 
 router.post('/', criarPaciente);
 router.get('/', listarPacientes);
+router.put('/:id', atualizarPaciente);
+router.delete('/:id', excluirPaciente);
 
 export default router;

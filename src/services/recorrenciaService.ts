@@ -60,3 +60,28 @@ export async function updateProximaConsulta(recorrenciaId: string, novaData: Dat
   }
 }
 
+export async function updateRecorrencia(id: string, data: Partial<CreateRecorrenciaDTO>): Promise<Recorrencia> {
+  const { data: recorrencia, error } = await supabase
+    .from('recorrencias')
+    .update(data)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Erro ao atualizar recorrência: ${error.message}`);
+  }
+
+  return recorrencia;
+}
+
+export async function deleteRecorrencia(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('recorrencias')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    throw new Error(`Erro ao deletar recorrência: ${error.message}`);
+  }
+}

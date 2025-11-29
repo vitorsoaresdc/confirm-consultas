@@ -13,6 +13,8 @@ exports.createPaciente = createPaciente;
 exports.getAllPacientes = getAllPacientes;
 exports.getPacienteById = getPacienteById;
 exports.getPacienteByTelefone = getPacienteByTelefone;
+exports.updatePaciente = updatePaciente;
+exports.deletePaciente = deletePaciente;
 const supabase_1 = require("../config/supabase");
 function createPaciente(data) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -75,5 +77,30 @@ function getPacienteByTelefone(telefone) {
             throw new Error(`Erro ao buscar paciente por telefone: ${error.message}`);
         }
         return data;
+    });
+}
+function updatePaciente(id, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { data: paciente, error } = yield supabase_1.supabase
+            .from('pacientes')
+            .update(data)
+            .eq('id', id)
+            .select()
+            .single();
+        if (error) {
+            throw new Error(`Erro ao atualizar paciente: ${error.message}`);
+        }
+        return paciente;
+    });
+}
+function deletePaciente(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { error } = yield supabase_1.supabase
+            .from('pacientes')
+            .delete()
+            .eq('id', id);
+        if (error) {
+            throw new Error(`Erro ao deletar paciente: ${error.message}`);
+        }
     });
 }
