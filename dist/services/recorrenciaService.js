@@ -1,99 +1,70 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createRecorrencia = createRecorrencia;
-exports.getAllRecorrencias = getAllRecorrencias;
-exports.getRecorrenciasAtivas = getRecorrenciasAtivas;
-exports.updateProximaConsulta = updateProximaConsulta;
-exports.updateRecorrencia = updateRecorrencia;
-exports.deleteRecorrencia = deleteRecorrencia;
-const supabase_1 = require("../config/supabase");
-const dateUtils_1 = require("../utils/dateUtils");
-function createRecorrencia(data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { data: recorrencia, error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .insert({
-            paciente_id: data.paciente_id,
-            dia_semana: data.dia_semana,
-            hora: data.hora,
-            tipo: data.tipo,
-            proxima_consulta: data.proxima_consulta,
-            ativo: true,
-        })
-            .select()
-            .single();
-        if (error) {
-            throw new Error(`Erro ao criar recorrência: ${error.message}`);
-        }
-        return recorrencia;
-    });
+import { supabase } from '../config/supabase.js';
+import { formatDateToISO } from '../utils/dateUtils.js';
+export async function createRecorrencia(data) {
+    const { data: recorrencia, error } = await supabase
+        .from('recorrencias')
+        .insert({
+        paciente_id: data.paciente_id,
+        dia_semana: data.dia_semana,
+        hora: data.hora,
+        tipo: data.tipo,
+        proxima_consulta: data.proxima_consulta,
+        ativo: true,
+    })
+        .select()
+        .single();
+    if (error) {
+        throw new Error(`Erro ao criar recorrência: ${error.message}`);
+    }
+    return recorrencia;
 }
-function getAllRecorrencias() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { data, error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .select('*')
-            .order('created_at', { ascending: false });
-        if (error) {
-            throw new Error(`Erro ao buscar recorrências: ${error.message}`);
-        }
-        return data || [];
-    });
+export async function getAllRecorrencias() {
+    const { data, error } = await supabase
+        .from('recorrencias')
+        .select('*')
+        .order('created_at', { ascending: false });
+    if (error) {
+        throw new Error(`Erro ao buscar recorrências: ${error.message}`);
+    }
+    return data || [];
 }
-function getRecorrenciasAtivas() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { data, error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .select('*')
-            .eq('ativo', true);
-        if (error) {
-            throw new Error(`Erro ao buscar recorrências ativas: ${error.message}`);
-        }
-        return data || [];
-    });
+export async function getRecorrenciasAtivas() {
+    const { data, error } = await supabase
+        .from('recorrencias')
+        .select('*')
+        .eq('ativo', true);
+    if (error) {
+        throw new Error(`Erro ao buscar recorrências ativas: ${error.message}`);
+    }
+    return data || [];
 }
-function updateProximaConsulta(recorrenciaId, novaData) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .update({ proxima_consulta: (0, dateUtils_1.formatDateToISO)(novaData) })
-            .eq('id', recorrenciaId);
-        if (error) {
-            throw new Error(`Erro ao atualizar próxima consulta: ${error.message}`);
-        }
-    });
+export async function updateProximaConsulta(recorrenciaId, novaData) {
+    const { error } = await supabase
+        .from('recorrencias')
+        .update({ proxima_consulta: formatDateToISO(novaData) })
+        .eq('id', recorrenciaId);
+    if (error) {
+        throw new Error(`Erro ao atualizar próxima consulta: ${error.message}`);
+    }
 }
-function updateRecorrencia(id, data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { data: recorrencia, error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .update(data)
-            .eq('id', id)
-            .select()
-            .single();
-        if (error) {
-            throw new Error(`Erro ao atualizar recorrência: ${error.message}`);
-        }
-        return recorrencia;
-    });
+export async function updateRecorrencia(id, data) {
+    const { data: recorrencia, error } = await supabase
+        .from('recorrencias')
+        .update(data)
+        .eq('id', id)
+        .select()
+        .single();
+    if (error) {
+        throw new Error(`Erro ao atualizar recorrência: ${error.message}`);
+    }
+    return recorrencia;
 }
-function deleteRecorrencia(id) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { error } = yield supabase_1.supabase
-            .from('recorrencias')
-            .delete()
-            .eq('id', id);
-        if (error) {
-            throw new Error(`Erro ao deletar recorrência: ${error.message}`);
-        }
-    });
+export async function deleteRecorrencia(id) {
+    const { error } = await supabase
+        .from('recorrencias')
+        .delete()
+        .eq('id', id);
+    if (error) {
+        throw new Error(`Erro ao deletar recorrência: ${error.message}`);
+    }
 }

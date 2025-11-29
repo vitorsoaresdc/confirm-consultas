@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { createRecorrencia, getAllRecorrencias, updateRecorrencia, deleteRecorrencia } from '../services/recorrenciaService';
+import { createRecorrencia, getAllRecorrencias, updateRecorrencia, deleteRecorrencia } from '../services/recorrenciaService.js';
 
 const createRecorrenciaSchema = z.object({
   paciente_id: z.string().uuid('ID do paciente deve ser um UUID válido'),

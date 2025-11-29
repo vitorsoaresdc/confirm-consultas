@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { getPacienteByTelefone } from '../services/pacienteService';
-import { getProximaConsultaEnviadaPorPaciente, updateConsultaStatus } from '../services/consultaService';
+import { getPacienteByTelefone } from '../services/pacienteService.js';
+import { getProximaConsultaEnviadaPorPaciente, updateConsultaStatus } from '../services/consultaService.js';
 
 function normalizeText(text: string): string {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();

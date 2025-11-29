@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const pacienteController_1 = require("../controllers/pacienteController");
-const router = (0, express_1.Router)();
-router.post('/', pacienteController_1.criarPaciente);
-router.get('/', pacienteController_1.listarPacientes);
-router.put('/:id', pacienteController_1.atualizarPaciente);
-router.delete('/:id', pacienteController_1.excluirPaciente);
-exports.default = router;
+import { Router } from 'express';
+import { criarPaciente, listarPacientes, atualizarPaciente, excluirPaciente } from '../controllers/pacienteController.js';
+const router = Router();
+router.post('/', criarPaciente);
+router.get('/', listarPacientes);
+router.put('/:id', atualizarPaciente);
+router.delete('/:id', excluirPaciente);
+export default router;

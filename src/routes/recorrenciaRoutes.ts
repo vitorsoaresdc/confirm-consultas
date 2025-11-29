@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { criarRecorrencia, listarRecorrencias, atualizarRecorrencia, excluirRecorrencia } from '../controllers/recorrenciaController';
+import { criarRecorrencia, listarRecorrencias, atualizarRecorrencia, excluirRecorrencia } from '../controllers/recorrenciaController.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import { supabase } from '../config/supabase';
-import { Paciente, CreatePacienteDTO } from '../types/global';
+import { supabase } from '../config/supabase.js';
+import { Paciente, CreatePacienteDTO } from '../types/global.js';
 
 export async function createPaciente(data: CreatePacienteDTO): Promise<Paciente> {
   const { data: paciente, error } = await supabase

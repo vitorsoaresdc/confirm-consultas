@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000';
+// Em produção, usa o mesmo domínio com prefixo /api
+// Em desenvolvimento, usa o backend local
+const API_URL = import.meta.env.PROD
+  ? '/api'
+  : 'http://localhost:3000/api';
 
 export interface Paciente {
   id: string;

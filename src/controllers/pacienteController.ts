@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { createPaciente, getAllPacientes, updatePaciente, deletePaciente } from '../services/pacienteService';
+import { createPaciente, getAllPacientes, updatePaciente, deletePaciente } from '../services/pacienteService.js';
 
 const createPacienteSchema = z.object({
   nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),

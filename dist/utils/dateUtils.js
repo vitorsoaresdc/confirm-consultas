@@ -1,23 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.addDays = addDays;
-exports.addMonths = addMonths;
-exports.getNextOccurrence = getNextOccurrence;
-exports.formatDateToISO = formatDateToISO;
-exports.isWithinThreeHours = isWithinThreeHours;
-exports.formatTime = formatTime;
-exports.getNextDateForDayOfWeek = getNextDateForDayOfWeek;
-function addDays(date, days) {
+export function addDays(date, days) {
     const result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
 }
-function addMonths(date, months) {
+export function addMonths(date, months) {
     const result = new Date(date);
     result.setMonth(result.getMonth() + months);
     return result;
 }
-function getNextOccurrence(tipo, currentDate) {
+export function getNextOccurrence(tipo, currentDate) {
     switch (tipo) {
         case 'semanal':
             return addDays(currentDate, 7);
@@ -29,24 +20,24 @@ function getNextOccurrence(tipo, currentDate) {
             throw new Error(`Tipo de recorrência inválido: ${tipo}`);
     }
 }
-function formatDateToISO(date) {
+export function formatDateToISO(date) {
     return date.toISOString();
 }
-function isWithinThreeHours(consultaDataHora) {
+export function isWithinThreeHours(consultaDataHora) {
     const now = new Date();
     const consultaDate = new Date(consultaDataHora);
     const diffInMs = consultaDate.getTime() - now.getTime();
     const diffInHours = diffInMs / (1000 * 60 * 60);
     return diffInHours <= 3 && diffInHours >= 2.83;
 }
-function formatTime(date) {
+export function formatTime(date) {
     return date.toLocaleTimeString('pt-BR', {
         hour: '2-digit',
         minute: '2-digit',
         timeZone: 'America/Sao_Paulo'
     });
 }
-function getNextDateForDayOfWeek(dayOfWeek, time) {
+export function getNextDateForDayOfWeek(dayOfWeek, time) {
     const now = new Date();
     const [hours, minutes] = time.split(':').map(Number);
     const result = new Date(now);

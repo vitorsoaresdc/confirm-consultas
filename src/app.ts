@@ -1,22 +1,34 @@
 import express, { Application } from 'express';
 import cors from 'cors';
-import routes from './routes';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import routes from './routes/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app: Application = express();
 
-app.use(cors({ origin: [/^http:\/\/localhost:\d+$/], credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use('/', routes);
+// API routes (prefixadas com /api)
+app.use('/api', routes);
 
-app.use((req, res) => {
-  res.status(404).json({ success: false, error: 'Rota não encontrada' });
+// Servir arquivos estáticos do frontend (após o build)
+const frontendPath = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendPath));
+
+// Todas as outras rotas retornam o index.html do React (SPA routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 export default app;

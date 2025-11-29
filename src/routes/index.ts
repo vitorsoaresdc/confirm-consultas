@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import pacienteRoutes from './pacienteRoutes';
-import recorrenciaRoutes from './recorrenciaRoutes';
-import consultaRoutes from './consultaRoutes';
-import webhookRoutes from './webhookRoutes';
+import pacienteRoutes from './pacienteRoutes.js';
+import recorrenciaRoutes from './recorrenciaRoutes.js';
+import consultaRoutes from './consultaRoutes.js';
+import webhookRoutes from './webhookRoutes.js';
 
 const router = Router();
 

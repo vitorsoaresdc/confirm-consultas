@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { listarConsultas, atualizarStatusConsulta } from '../controllers/consultaController';
+import { listarConsultas, atualizarStatusConsulta } from '../controllers/consultaController.js';
 
 const router = Router();
 

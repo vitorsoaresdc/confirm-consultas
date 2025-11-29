@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { getAllConsultas, updateConsultaStatus } from '../services/consultaService';
+import { getAllConsultas, updateConsultaStatus } from '../services/consultaService.js';
 
 const updateStatusSchema = z.object({
   status: z.enum(['pendente', 'enviada', 'confirmada', 'cancelada'], {

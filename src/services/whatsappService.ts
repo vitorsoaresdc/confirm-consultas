@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { whappiConfig } from '../config/whappi';
-import { Paciente, Consulta } from '../types/global';
-import { formatTime } from '../utils/dateUtils';
+import { whappiConfig } from '../config/whappi.js';
+import { Paciente, Consulta } from '../types/global.js';
+import { formatTime } from '../utils/dateUtils.js';
 
 export async function sendMessage(numero: string, texto: string): Promise<void> {
   try {

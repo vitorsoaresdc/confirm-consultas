@@ -1,7 +1,7 @@
 import cron from 'node-cron';
-import { getRecorrenciasAtivas, updateProximaConsulta } from '../services/recorrenciaService';
-import { createConsulta, verificarConsultaDuplicada } from '../services/consultaService';
-import { getNextOccurrence } from '../utils/dateUtils';
+import { getRecorrenciasAtivas, updateProximaConsulta } from '../services/recorrenciaService.js';
+import { createConsulta, verificarConsultaDuplicada } from '../services/consultaService.js';
+import { getNextOccurrence } from '../utils/dateUtils.js';
 
 export function startGerarConsultasRecorrentesJob() {
   cron.schedule('5 0 * * *', async () => {

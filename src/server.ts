@@ -1,23 +1,24 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import app from './app';
-import { startEnviarConfirmacoesJob } from './jobs/enviarConfirmacoesJob';
-import { startGerarConsultasRecorrentesJob } from './jobs/gerarConsultasRecorrentesJob';
+import app from './app.js';
+import { startEnviarConfirmacoesJob } from './jobs/enviarConfirmacoesJob.js';
+import { startGerarConsultasRecorrentesJob } from './jobs/gerarConsultasRecorrentesJob.js';
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`\n🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`📍 Frontend: http://localhost:${PORT}/`);
   console.log(`📍 Health check: http://localhost:${PORT}/health`);
-  console.log(`📋 Endpoints disponíveis:`);
-  console.log(`   POST   /pacientes`);
-  console.log(`   GET    /pacientes`);
-  console.log(`   POST   /recorrencias`);
-  console.log(`   GET    /recorrencias`);
-  console.log(`   GET    /consultas`);
-  console.log(`   PATCH  /consultas/:id/status`);
-  console.log(`   POST   /webhook/whatsapp`);
+  console.log(`📋 API Endpoints disponíveis:`);
+  console.log(`   POST   /api/pacientes`);
+  console.log(`   GET    /api/pacientes`);
+  console.log(`   POST   /api/recorrencias`);
+  console.log(`   GET    /api/recorrencias`);
+  console.log(`   GET    /api/consultas`);
+  console.log(`   PATCH  /api/consultas/:id/status`);
+  console.log(`   POST   /api/webhook/whatsapp`);
   console.log();
 
   console.log('⏰ Iniciando cron jobs...');

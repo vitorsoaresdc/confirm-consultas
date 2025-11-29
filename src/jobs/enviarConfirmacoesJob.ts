@@ -1,8 +1,8 @@
 import cron from 'node-cron';
-import { getConsultasPendentes, updateConsultaStatus } from '../services/consultaService';
-import { getPacienteById } from '../services/pacienteService';
-import { sendConfirmation } from '../services/whatsappService';
-import { isWithinThreeHours } from '../utils/dateUtils';
+import { getConsultasPendentes, updateConsultaStatus } from '../services/consultaService.js';
+import { getPacienteById } from '../services/pacienteService.js';
+import { sendConfirmation } from '../services/whatsappService.js';
+import { isWithinThreeHours } from '../utils/dateUtils.js';
 
 export function startEnviarConfirmacoesJob() {
   cron.schedule('*/5 * * * *', async () => {

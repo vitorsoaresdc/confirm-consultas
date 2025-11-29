@@ -1,6 +1,6 @@
-import { supabase } from '../config/supabase';
-import { Consulta } from '../types/global';
-import { formatDateToISO } from '../utils/dateUtils';
+import { supabase } from '../config/supabase.js';
+import { Consulta } from '../types/global.js';
+import { formatDateToISO } from '../utils/dateUtils.js';
 
 export async function createConsulta(pacienteId: string, dataHora: Date): Promise<Consulta> {
   const { data: consulta, error } = await supabase
