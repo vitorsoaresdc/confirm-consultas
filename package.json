@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc && cp -r src/static dist/",
+    "build": "tsc && node copy-static.js",
     "start": "node dist/server.js"
   },
   "dependencies": {
