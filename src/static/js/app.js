@@ -248,6 +248,12 @@ function renderPacientes() {
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button 
+                    onclick="showEditPacienteModal('${p.id}')" 
+                    class="text-purple-600 hover:text-purple-800 font-medium transition-colors mr-3"
+                  >
+                    Editar
+                  </button>
+                  <button 
                     onclick="deletePaciente('${p.id}')" 
                     class="text-red-600 hover:text-red-800 font-medium transition-colors"
                   >
@@ -341,6 +347,12 @@ function renderRecorrencias() {
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${formatDate(r.proxima_consulta)}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button 
+                      onclick="showEditRecorrenciaModal('${r.id}')" 
+                      class="text-purple-600 hover:text-purple-800 font-medium transition-colors mr-3"
+                    >
+                      Editar
+                    </button>
                     <button 
                       onclick="deleteRecorrencia('${r.id}')" 
                       class="text-red-600 hover:text-red-800 font-medium transition-colors"
@@ -481,77 +493,442 @@ async function loadData() {
     render();
   } catch (error) {
     console.error('Erro ao carregar dados:', error);
+    showNotification('Erro ao carregar dados', 'error');
   }
 }
 
+// Funções de Modal
+function showModal(title, content, onSubmit) {
+  const modalContainer = document.getElementById('modal-container');
+  modalContainer.innerHTML = `
+    <div class="modal active items-center justify-center p-4" onclick="closeModal(event)">
+      <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-800">${title}</h3>
+          <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <form onsubmit="${onSubmit}; return false;" id="modal-form">
+          ${content}
+          <div class="flex space-x-3 mt-6">
+            <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-all">
+              Cancelar
+            </button>
+            <button type="submit" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 font-medium shadow-lg transition-all">
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function closeModal(event) {
+  if (event && event.target.classList.contains('modal')) {
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
+  } else if (!event) {
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = '';
+  }
+}
+
+function showNotification(message, type = 'success') {
+  const colors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500'
+  };
+
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-xl shadow-lg z-50 transform transition-all duration-300`;
+  notification.style.transform = 'translateX(400px)';
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.style.transform = 'translateX(0)';
+  }, 10);
+
+  setTimeout(() => {
+    notification.style.transform = 'translateX(400px)';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+// Pacientes - Adicionar
 function showAddPacienteModal() {
-  const nome = prompt('Nome do paciente:');
-  const telefone = prompt('Telefone (ex: 22999800898):');
+  const content = `
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Nome do Paciente</label>
+        <input 
+          type="text" 
+          id="paciente-nome"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          placeholder="Ex: João Silva"
+          required
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Telefone (com DDD)</label>
+        <input 
+          type="text" 
+          id="paciente-telefone"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          placeholder="Ex: 22999800898"
+          required
+        >
+      </div>
+    </div>
+  `;
 
-  if (nome && telefone) {
-    addPaciente(nome, telefone);
-  }
+  showModal('Novo Paciente', content, 'handleAddPaciente(event)');
 }
 
-async function addPaciente(nome, telefone) {
+async function handleAddPaciente(event) {
+  event.preventDefault();
+  const nome = document.getElementById('paciente-nome').value;
+  const telefone = document.getElementById('paciente-telefone').value;
+
   try {
     await api.createPaciente({ nome, telefone });
+    closeModal();
     await loadData();
+    showNotification('Paciente adicionado com sucesso!');
   } catch (error) {
-    alert('Erro ao adicionar paciente');
+    showNotification('Erro ao adicionar paciente', 'error');
     console.error(error);
   }
 }
 
+// Pacientes - Editar
+function showEditPacienteModal(id) {
+  const paciente = state.pacientes.find(p => p.id === id);
+  if (!paciente) return;
+
+  const content = `
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Nome do Paciente</label>
+        <input 
+          type="text" 
+          id="paciente-nome"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          value="${paciente.nome}"
+          required
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Telefone (com DDD)</label>
+        <input 
+          type="text" 
+          id="paciente-telefone"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          value="${paciente.telefone}"
+          required
+        >
+      </div>
+    </div>
+  `;
+
+  showModal('Editar Paciente', content, `handleEditPaciente(event, '${id}')`);
+}
+
+async function handleEditPaciente(event, id) {
+  event.preventDefault();
+  const nome = document.getElementById('paciente-nome').value;
+  const telefone = document.getElementById('paciente-telefone').value;
+
+  try {
+    await api.updatePaciente(id, { nome, telefone });
+    closeModal();
+    await loadData();
+    showNotification('Paciente atualizado com sucesso!');
+  } catch (error) {
+    showNotification('Erro ao atualizar paciente', 'error');
+    console.error(error);
+  }
+}
+
+// Pacientes - Deletar
 async function deletePaciente(id) {
-  if (confirm('Tem certeza que deseja excluir este paciente?')) {
-    try {
-      await api.deletePaciente(id);
-      await loadData();
-    } catch (error) {
-      alert('Erro ao excluir paciente');
-      console.error(error);
-    }
+  const paciente = state.pacientes.find(p => p.id === id);
+  const content = `
+    <div class="text-center py-4">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Excluir Paciente</h3>
+      <p class="text-gray-600">Tem certeza que deseja excluir <strong>${paciente?.nome}</strong>?</p>
+      <p class="text-sm text-gray-500 mt-2">Esta ação não pode ser desfeita.</p>
+    </div>
+  `;
+
+  const modalContainer = document.getElementById('modal-container');
+  modalContainer.innerHTML = `
+    <div class="modal active items-center justify-center p-4" onclick="closeModal(event)">
+      <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
+        ${content}
+        <div class="flex space-x-3 mt-6">
+          <button onclick="closeModal()" class="flex-1 px-4 py-2.5 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-all">
+            Cancelar
+          </button>
+          <button onclick="confirmDeletePaciente('${id}')" class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition-all">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function confirmDeletePaciente(id) {
+  try {
+    await api.deletePaciente(id);
+    closeModal();
+    await loadData();
+    showNotification('Paciente excluído com sucesso!');
+  } catch (error) {
+    showNotification('Erro ao excluir paciente', 'error');
+    console.error(error);
   }
 }
 
+// Recorrências - Adicionar
 function showAddRecorrenciaModal() {
-  const pacienteId = prompt('ID do Paciente:');
-  const diaSemana = prompt('Dia da semana (0-6, 0=Domingo):');
-  const hora = prompt('Hora (HH:MM):');
-  const tipo = prompt('Tipo (semanal/quinzenal/mensal):');
-  const proximaConsulta = prompt('Próxima consulta (YYYY-MM-DD):');
+  const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-  if (pacienteId && diaSemana && hora && tipo && proximaConsulta) {
-    addRecorrencia({
-      paciente_id: pacienteId,
-      dia_semana: parseInt(diaSemana),
-      hora,
-      tipo,
-      proxima_consulta: proximaConsulta
-    });
-  }
+  const content = `
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Paciente</label>
+        <select 
+          id="recorrencia-paciente"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          <option value="">Selecione um paciente</option>
+          ${state.pacientes.map(p => `<option value="${p.id}">${p.nome}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Dia da Semana</label>
+        <select 
+          id="recorrencia-dia"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          ${diasSemana.map((dia, index) => `<option value="${index}">${dia}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Hora</label>
+        <input 
+          type="time" 
+          id="recorrencia-hora"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo</label>
+        <select 
+          id="recorrencia-tipo"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          <option value="semanal">Semanal</option>
+          <option value="quinzenal">Quinzenal</option>
+          <option value="mensal">Mensal</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Próxima Consulta</label>
+        <input 
+          type="date" 
+          id="recorrencia-proxima"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+      </div>
+    </div>
+  `;
+
+  showModal('Nova Recorrência', content, 'handleAddRecorrencia(event)');
 }
 
-async function addRecorrencia(recorrencia) {
+async function handleAddRecorrencia(event) {
+  event.preventDefault();
+
+  const recorrencia = {
+    paciente_id: document.getElementById('recorrencia-paciente').value,
+    dia_semana: parseInt(document.getElementById('recorrencia-dia').value),
+    hora: document.getElementById('recorrencia-hora').value,
+    tipo: document.getElementById('recorrencia-tipo').value,
+    proxima_consulta: document.getElementById('recorrencia-proxima').value
+  };
+
   try {
     await api.createRecorrencia(recorrencia);
+    closeModal();
     await loadData();
+    showNotification('Recorrência adicionada com sucesso!');
   } catch (error) {
-    alert('Erro ao adicionar recorrência');
+    showNotification('Erro ao adicionar recorrência', 'error');
     console.error(error);
   }
 }
 
+// Recorrências - Editar
+function showEditRecorrenciaModal(id) {
+  const recorrencia = state.recorrencias.find(r => r.id === id);
+  if (!recorrencia) return;
+
+  const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
+  const content = `
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Paciente</label>
+        <select 
+          id="recorrencia-paciente"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          ${state.pacientes.map(p => `
+            <option value="${p.id}" ${p.id === recorrencia.paciente_id ? 'selected' : ''}>
+              ${p.nome}
+            </option>
+          `).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Dia da Semana</label>
+        <select 
+          id="recorrencia-dia"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          ${diasSemana.map((dia, index) => `
+            <option value="${index}" ${index === recorrencia.dia_semana ? 'selected' : ''}>
+              ${dia}
+            </option>
+          `).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Hora</label>
+        <input 
+          type="time" 
+          id="recorrencia-hora"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          value="${recorrencia.hora}"
+          required
+        >
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo</label>
+        <select 
+          id="recorrencia-tipo"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          required
+        >
+          <option value="semanal" ${recorrencia.tipo === 'semanal' ? 'selected' : ''}>Semanal</option>
+          <option value="quinzenal" ${recorrencia.tipo === 'quinzenal' ? 'selected' : ''}>Quinzenal</option>
+          <option value="mensal" ${recorrencia.tipo === 'mensal' ? 'selected' : ''}>Mensal</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Próxima Consulta</label>
+        <input 
+          type="date" 
+          id="recorrencia-proxima"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none"
+          value="${recorrencia.proxima_consulta.split('T')[0]}"
+          required
+        >
+      </div>
+    </div>
+  `;
+
+  showModal('Editar Recorrência', content, `handleEditRecorrencia(event, '${id}')`);
+}
+
+async function handleEditRecorrencia(event, id) {
+  event.preventDefault();
+
+  const recorrencia = {
+    paciente_id: document.getElementById('recorrencia-paciente').value,
+    dia_semana: parseInt(document.getElementById('recorrencia-dia').value),
+    hora: document.getElementById('recorrencia-hora').value,
+    tipo: document.getElementById('recorrencia-tipo').value,
+    proxima_consulta: document.getElementById('recorrencia-proxima').value
+  };
+
+  try {
+    await api.updateRecorrencia(id, recorrencia);
+    closeModal();
+    await loadData();
+    showNotification('Recorrência atualizada com sucesso!');
+  } catch (error) {
+    showNotification('Erro ao atualizar recorrência', 'error');
+    console.error(error);
+  }
+}
+
+// Recorrências - Deletar
 async function deleteRecorrencia(id) {
-  if (confirm('Tem certeza que deseja excluir esta recorrência?')) {
-    try {
-      await api.deleteRecorrencia(id);
-      await loadData();
-    } catch (error) {
-      alert('Erro ao excluir recorrência');
-      console.error(error);
-    }
+  const recorrencia = state.recorrencias.find(r => r.id === id);
+  const paciente = state.pacientes.find(p => p.id === recorrencia?.paciente_id);
+
+  const content = `
+    <div class="text-center py-4">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">Excluir Recorrência</h3>
+      <p class="text-gray-600">Tem certeza que deseja excluir a recorrência de <strong>${paciente?.nome}</strong>?</p>
+      <p class="text-sm text-gray-500 mt-2">Esta ação não pode ser desfeita.</p>
+    </div>
+  `;
+
+  const modalContainer = document.getElementById('modal-container');
+  modalContainer.innerHTML = `
+    <div class="modal active items-center justify-center p-4" onclick="closeModal(event)">
+      <div class="modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6" onclick="event.stopPropagation()">
+        ${content}
+        <div class="flex space-x-3 mt-6">
+          <button onclick="closeModal()" class="flex-1 px-4 py-2.5 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-all">
+            Cancelar
+          </button>
+          <button onclick="confirmDeleteRecorrencia('${id}')" class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium transition-all">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function confirmDeleteRecorrencia(id) {
+  try {
+    await api.deleteRecorrencia(id);
+    closeModal();
+    await loadData();
+    showNotification('Recorrência excluída com sucesso!');
+  } catch (error) {
+    showNotification('Erro ao excluir recorrência', 'error');
+    console.error(error);
   }
 }
 

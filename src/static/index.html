@@ -5,17 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confirm Consultas</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/lucide-static@0.16.29/font/lucide.min.css" rel="stylesheet">
   <style>
-    .lucide {
-      width: 20px;
-      height: 20px;
+    /* Modal Animation */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.2s ease-out;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      animation: slideUp 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body class="bg-gray-50">
   <!-- Container Principal -->
   <div id="app"></div>
+
+  <!-- Modal Container -->
+  <div id="modal-container"></div>
 
   <!-- Scripts -->
   <script src="/js/api.js"></script>
