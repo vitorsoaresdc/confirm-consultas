@@ -1,6 +1,6 @@
 import { supabase } from '../config/supabase.js';
 import { Recorrencia, CreateRecorrenciaDTO } from '../types/global.js';
-import { getNextDateForDayOfWeek, formatDateToISO } from '../utils/dateUtils.js';
+import { formatDateToISO } from '../utils/dateUtils.js';
 
 export async function createRecorrencia(data: CreateRecorrenciaDTO): Promise<Recorrencia> {
   const { data: recorrencia, error } = await supabase
