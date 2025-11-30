@@ -1,4 +1,3 @@
-// API Client
 const API_URL = window.location.origin + '/api';
 
 const api = {
@@ -13,7 +12,7 @@ const api = {
     const response = await fetch(`${API_URL}/pacientes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(paciente)
+      body: JSON.stringify(paciente),
     });
     const data = await response.json();
     return data.data;
@@ -23,7 +22,7 @@ const api = {
     const response = await fetch(`${API_URL}/pacientes/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(paciente)
+      body: JSON.stringify(paciente),
     });
     const data = await response.json();
     return data.data;
@@ -31,7 +30,7 @@ const api = {
 
   async deletePaciente(id) {
     await fetch(`${API_URL}/pacientes/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     });
   },
 
@@ -46,7 +45,7 @@ const api = {
     const response = await fetch(`${API_URL}/recorrencias`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(recorrencia)
+      body: JSON.stringify(recorrencia),
     });
     const data = await response.json();
     return data.data;
@@ -56,7 +55,7 @@ const api = {
     const response = await fetch(`${API_URL}/recorrencias/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(recorrencia)
+      body: JSON.stringify(recorrencia),
     });
     const data = await response.json();
     return data.data;
@@ -64,7 +63,7 @@ const api = {
 
   async deleteRecorrencia(id) {
     await fetch(`${API_URL}/recorrencias/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
     });
   },
 
@@ -79,10 +78,9 @@ const api = {
     const response = await fetch(`${API_URL}/consultas/${id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status })
+      body: JSON.stringify({ status }),
     });
     const data = await response.json();
     return data.data;
-  }
+  },
 };
-
