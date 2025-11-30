@@ -17,7 +17,7 @@
     "build": "npm run build:backend && npm run build:frontend && npm run copy:frontend",
     "build:backend": "tsc",
     "build:frontend": "cd frontend && npm install && npm run build",
-    "copy:frontend": "mkdir -p dist/public && cp -r frontend/dist/* dist/public/",
+    "copy:frontend": "node copy-frontend.js",
     "start": "node dist/server.js",
     "postinstall": "cd frontend && npm install"
   },
