@@ -16,22 +16,20 @@ app.get('/health', (req, res) => {
 });
 // API routes (prefixadas com /api)
 app.use('/api', routes);
-// Servir arquivos estáticos do frontend (após o build)
-// Frontend é copiado para dist/public/ durante o build
-const frontendPath = path.join(__dirname, 'public');
-const indexPath = path.join(frontendPath, 'index.html');
-// Log do caminho para debug
+// Servir arquivos estáticos (HTML, CSS, JS)
+const staticPath = path.join(__dirname, 'static');
+const indexPath = path.join(staticPath, 'index.html');
 console.log('📁 __dirname:', __dirname);
-console.log('📁 Frontend path:', frontendPath);
+console.log('📁 Static path:', staticPath);
 console.log('📁 Index.html exists:', existsSync(indexPath));
-if (existsSync(frontendPath)) {
-    app.use(express.static(frontendPath));
-    console.log('✅ Servindo frontend estático de:', frontendPath);
+if (existsSync(staticPath)) {
+    app.use(express.static(staticPath));
+    console.log('✅ Servindo arquivos estáticos de:', staticPath);
 }
 else {
-    console.warn('⚠️ Frontend dist não encontrado em:', frontendPath);
+    console.warn('⚠️ Pasta static não encontrada em:', staticPath);
 }
-// Todas as outras rotas retornam o index.html do React (SPA routing)
+// Todas as outras rotas retornam o index.html (SPA routing)
 app.get('*', (req, res) => {
     if (existsSync(indexPath)) {
         res.sendFile(indexPath);
@@ -40,9 +38,8 @@ app.get('*', (req, res) => {
         res.status(404).json({
             success: false,
             error: 'Frontend não encontrado',
-            frontendPath: frontendPath,
-            dirname: __dirname,
-            indexExists: existsSync(indexPath)
+            staticPath: staticPath,
+            dirname: __dirname
         });
     }
 });
