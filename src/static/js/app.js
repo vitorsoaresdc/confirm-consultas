@@ -32,6 +32,13 @@ function renderLogin() {
           <p class="text-gray-600">Sistema de Confirmação via WhatsApp</p>
         </div>
         
+        <!-- Credenciais de acesso -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <p class="text-sm text-blue-800 font-semibold mb-2">🔑 Credenciais de Acesso:</p>
+          <p class="text-xs text-blue-700">Usuário: <span class="font-mono font-bold">admin</span></p>
+          <p class="text-xs text-blue-700">Senha: <span class="font-mono font-bold">admin123</span></p>
+        </div>
+        
         <form onsubmit="handleLogin(event)" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
@@ -40,6 +47,7 @@ function renderLogin() {
               id="username"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Digite seu usuário"
+              value="admin"
               required
             >
           </div>
@@ -287,19 +295,27 @@ function renderConsultas() {
   `;
 }
 
+// Credenciais de login
+const CREDENTIALS = {
+  username: 'admin',
+  password: 'admin123'
+};
+
 // Event Handlers
 function handleLogin(event) {
   event.preventDefault();
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
-  // Simulação de login (você pode adicionar validação real depois)
-  if (username && password) {
+  // Validar credenciais
+  if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
     state.user = { username };
     state.currentView = 'dashboard';
     state.currentTab = 'pacientes';
     render();
     loadData();
+  } else {
+    alert('❌ Usuário ou senha incorretos!\n\nUse:\nUsuário: admin\nSenha: admin123');
   }
 }
 
