@@ -133,3 +133,4 @@ Execute `database.sql` no Supabase para criar:
 
 ## Desenvolvido com 💜
 
+# Force deploy - Sun Nov 30 10:31:17 -03 2025
