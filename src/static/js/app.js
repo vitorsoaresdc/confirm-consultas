@@ -25,27 +25,48 @@ function formatPhone(phone) {
 // Renderização de Views
 function renderLogin() {
   return `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
-      <div class="bg-white p-8 rounded-lg shadow-2xl w-96">
-        <div class="text-center mb-8">
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-purple-50 to-lavender-100" style="background: linear-gradient(135deg, #f8f9fa 0%, #f3e8ff 50%, #e9d5ff 100%);">
+      <div class="bg-white/80 backdrop-blur-sm p-10 rounded-2xl shadow-xl w-full max-w-md border border-purple-100">
+        <!-- Logo/Header -->
+        <div class="text-center mb-10">
+          <div class="inline-block p-4 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-2xl mb-4">
+            <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
           <h1 class="text-3xl font-bold text-gray-800 mb-2">Confirm Consultas</h1>
-          <p class="text-gray-600">Sistema de Confirmação via WhatsApp</p>
+          <p class="text-gray-500 text-sm">Sistema de Confirmação via WhatsApp</p>
         </div>
         
         <!-- Credenciais de acesso -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p class="text-sm text-blue-800 font-semibold mb-2">🔑 Credenciais de Acesso:</p>
-          <p class="text-xs text-blue-700">Usuário: <span class="font-mono font-bold">admin</span></p>
-          <p class="text-xs text-blue-700">Senha: <span class="font-mono font-bold">admin123</span></p>
+        <div class="bg-gradient-to-r from-purple-50 to-lavender-50 border border-purple-200 rounded-xl p-4 mb-6">
+          <div class="flex items-start space-x-2">
+            <svg class="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+            </svg>
+            <div class="flex-1">
+              <p class="text-sm text-purple-900 font-semibold mb-2">Credenciais de Acesso</p>
+              <div class="space-y-1">
+                <p class="text-xs text-purple-700">
+                  <span class="text-gray-500">Usuário:</span> 
+                  <span class="font-mono font-bold text-purple-800 ml-1">admin</span>
+                </p>
+                <p class="text-xs text-purple-700">
+                  <span class="text-gray-500">Senha:</span> 
+                  <span class="font-mono font-bold text-purple-800 ml-1">admin123</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <form onsubmit="handleLogin(event)" class="space-y-4">
+        <form onsubmit="handleLogin(event)" class="space-y-5">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Usuário</label>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Usuário</label>
             <input 
               type="text" 
               id="username"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none bg-white"
               placeholder="Digite seu usuário"
               value="admin"
               required
@@ -53,11 +74,11 @@ function renderLogin() {
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Senha</label>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Senha</label>
             <input 
               type="password" 
               id="password"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all outline-none bg-white"
               placeholder="Digite sua senha"
               required
             >
@@ -65,11 +86,15 @@ function renderLogin() {
           
           <button 
             type="submit"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all font-semibold shadow-lg shadow-purple-300/50 hover:shadow-xl hover:shadow-purple-400/50 transform hover:-translate-y-0.5"
           >
             Entrar
           </button>
         </form>
+        
+        <p class="text-center text-xs text-gray-400 mt-6">
+          © 2025 Confirm Consultas. Todos os direitos reservados.
+        </p>
       </div>
     </div>
   `;
@@ -82,34 +107,56 @@ function renderDashboard() {
   return `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
-      <header class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 class="text-2xl font-bold text-gray-900">Confirm Consultas</h1>
-          <button 
-            onclick="handleLogout()"
-            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
-          >
-            Sair
-          </button>
+      <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-5 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <div class="p-2 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-xl">
+                <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-gray-800">Confirm Consultas</h1>
+                <p class="text-sm text-gray-500">Olá, ${state.user?.username || 'Admin'}</p>
+              </div>
+            </div>
+            <button 
+              onclick="handleLogout()"
+              class="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-purple-300 transition-all"
+            >
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
       <!-- Tabs -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="border-b border-gray-200">
-          <nav class="flex space-x-8">
-            ${tabs.map(tab => `
-              <button
-                onclick="changeTab('${tab}')"
-                class="py-4 px-1 border-b-2 font-medium text-sm ${
-                  currentTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }"
-              >
-                ${tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            `).join('')}
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-2">
+          <nav class="flex space-x-2">
+            ${tabs.map(tab => {
+              const icons = {
+                pacientes: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>',
+                recorrencias: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>',
+                consultas: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>'
+              };
+              return `
+                <button
+                  onclick="changeTab('${tab}')"
+                  class="flex items-center space-x-2 py-3 px-5 rounded-lg font-medium text-sm transition-all ${
+                    currentTab === tab
+                      ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-300/50'
+                      : 'text-gray-600 hover:bg-purple-50 hover:text-purple-700'
+                  }"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    ${icons[tab]}
+                  </svg>
+                  <span>${tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
+                </button>
+              `;
+            }).join('')}
           </nav>
         </div>
 
@@ -137,47 +184,75 @@ function renderTabContent(tab) {
 
 function renderPacientes() {
   return `
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-gray-900">Pacientes</h2>
-        <button 
-          onclick="showAddPacienteModal()"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Novo Paciente
-        </button>
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-purple-50">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">Pacientes</h2>
+            <p class="text-sm text-gray-500 mt-1">${state.pacientes.length} paciente(s) cadastrado(s)</p>
+          </div>
+          <button 
+            onclick="showAddPacienteModal()"
+            class="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all font-medium shadow-lg shadow-purple-300/50 hover:shadow-xl"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span>Novo Paciente</span>
+          </button>
+        </div>
       </div>
       
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nome</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Telefone</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-white divide-y divide-gray-100">
             ${state.pacientes.length === 0 ? `
               <tr>
-                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                  Nenhum paciente cadastrado
+                <td colspan="4" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center justify-center space-y-3">
+                    <div class="p-4 bg-purple-50 rounded-full">
+                      <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                    </div>
+                    <p class="text-gray-500 font-medium">Nenhum paciente cadastrado</p>
+                    <p class="text-sm text-gray-400">Clique em "Novo Paciente" para começar</p>
+                  </div>
                 </td>
               </tr>
             ` : state.pacientes.map(p => `
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${p.nome}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatPhone(p.telefone)}</td>
+              <tr class="hover:bg-purple-50/30 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    p.ativo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-full flex items-center justify-center">
+                      <span class="text-purple-700 font-semibold text-sm">${p.nome.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <div class="text-sm font-medium text-gray-900">${p.nome}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${formatPhone(p.telefone)}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    p.ativo ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'
                   }">
-                    ${p.ativo ? 'Ativo' : 'Inativo'}
+                    ${p.ativo ? '✓ Ativo' : '○ Inativo'}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button onclick="deletePaciente('${p.id}')" class="text-red-600 hover:text-red-900">Excluir</button>
+                  <button 
+                    onclick="deletePaciente('${p.id}')" 
+                    class="text-red-600 hover:text-red-800 font-medium transition-colors"
+                  >
+                    Excluir
+                  </button>
                 </td>
               </tr>
             `).join('')}
@@ -192,47 +267,86 @@ function renderRecorrencias() {
   const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
   return `
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 class="text-lg font-semibold text-gray-900">Recorrências</h2>
-        <button 
-          onclick="showAddRecorrenciaModal()"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Nova Recorrência
-        </button>
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-purple-50">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">Recorrências</h2>
+            <p class="text-sm text-gray-500 mt-1">${state.recorrencias.length} recorrência(s) ativa(s)</p>
+          </div>
+          <button 
+            onclick="showAddRecorrenciaModal()"
+            class="flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all font-medium shadow-lg shadow-purple-300/50 hover:shadow-xl"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span>Nova Recorrência</span>
+          </button>
+        </div>
       </div>
       
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dia</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Próxima</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Paciente</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Dia</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Hora</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tipo</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Próxima</th>
+              <th class="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-white divide-y divide-gray-100">
             ${state.recorrencias.length === 0 ? `
               <tr>
-                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                  Nenhuma recorrência cadastrada
+                <td colspan="6" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center justify-center space-y-3">
+                    <div class="p-4 bg-purple-50 rounded-full">
+                      <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                      </svg>
+                    </div>
+                    <p class="text-gray-500 font-medium">Nenhuma recorrência cadastrada</p>
+                    <p class="text-sm text-gray-400">Clique em "Nova Recorrência" para começar</p>
+                  </div>
                 </td>
               </tr>
             ` : state.recorrencias.map(r => {
               const paciente = state.pacientes.find(p => p.id === r.paciente_id);
+              const tipoColors = {
+                'semanal': 'bg-blue-100 text-blue-700',
+                'quinzenal': 'bg-purple-100 text-purple-700',
+                'mensal': 'bg-indigo-100 text-indigo-700'
+              };
               return `
-                <tr>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${paciente?.nome || '-'}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${diasSemana[r.dia_semana]}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${r.hora}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${r.tipo}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(r.proxima_consulta)}</td>
+                <tr class="hover:bg-purple-50/30 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-full flex items-center justify-center">
+                        <span class="text-purple-700 font-semibold text-sm">${paciente?.nome?.charAt(0).toUpperCase() || '?'}</span>
+                      </div>
+                      <div class="text-sm font-medium text-gray-900">${paciente?.nome || '-'}</div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${diasSemana[r.dia_semana]}</td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">${r.hora}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${tipoColors[r.tipo] || 'bg-gray-100 text-gray-700'}">
+                      ${r.tipo}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${formatDate(r.proxima_consulta)}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onclick="deleteRecorrencia('${r.id}')" class="text-red-600 hover:text-red-900">Excluir</button>
+                    <button 
+                      onclick="deleteRecorrencia('${r.id}')" 
+                      class="text-red-600 hover:text-red-800 font-medium transition-colors"
+                    >
+                      Excluir
+                    </button>
                   </td>
                 </tr>
               `;
@@ -246,43 +360,72 @@ function renderRecorrencias() {
 
 function renderConsultas() {
   const statusColors = {
-    'pendente': 'bg-yellow-100 text-yellow-800',
-    'enviada': 'bg-blue-100 text-blue-800',
-    'confirmada': 'bg-green-100 text-green-800',
-    'cancelada': 'bg-red-100 text-red-800'
+    'pendente': 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    'enviada': 'bg-blue-100 text-blue-700 border-blue-200',
+    'confirmada': 'bg-green-100 text-green-700 border-green-200',
+    'cancelada': 'bg-red-100 text-red-700 border-red-200'
+  };
+
+  const statusIcons = {
+    'pendente': '⏳',
+    'enviada': '📤',
+    'confirmada': '✓',
+    'cancelada': '✗'
   };
 
   return `
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Consultas</h2>
+    <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-purple-50">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">Consultas Agendadas</h2>
+          <p class="text-sm text-gray-500 mt-1">${state.consultas.length} consulta(s) no sistema</p>
+        </div>
       </div>
       
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paciente</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data/Hora</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Paciente</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Data/Hora</th>
+              <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="bg-white divide-y divide-gray-100">
             ${state.consultas.length === 0 ? `
               <tr>
-                <td colspan="3" class="px-6 py-8 text-center text-gray-500">
-                  Nenhuma consulta agendada
+                <td colspan="3" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center justify-center space-y-3">
+                    <div class="p-4 bg-purple-50 rounded-full">
+                      <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                      </svg>
+                    </div>
+                    <p class="text-gray-500 font-medium">Nenhuma consulta agendada</p>
+                    <p class="text-sm text-gray-400">As consultas serão geradas automaticamente pelas recorrências</p>
+                  </div>
                 </td>
               </tr>
             ` : state.consultas.map(c => {
               const paciente = state.pacientes.find(p => p.id === c.paciente_id);
               return `
-                <tr>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${paciente?.nome || '-'}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(c.data_hora)} ${formatTime(c.data_hora)}</td>
+                <tr class="hover:bg-purple-50/30 transition-colors">
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusColors[c.status]}">
-                      ${c.status}
+                    <div class="flex items-center space-x-3">
+                      <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-br from-purple-100 to-lavender-200 rounded-full flex items-center justify-center">
+                        <span class="text-purple-700 font-semibold text-sm">${paciente?.nome?.charAt(0).toUpperCase() || '?'}</span>
+                      </div>
+                      <div class="text-sm font-medium text-gray-900">${paciente?.nome || '-'}</div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 font-medium">${formatDate(c.data_hora)}</div>
+                    <div class="text-sm text-gray-500">${formatTime(c.data_hora)}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-3 py-1.5 inline-flex items-center space-x-1.5 text-xs leading-5 font-semibold rounded-full border ${statusColors[c.status]}">
+                      <span>${statusIcons[c.status]}</span>
+                      <span>${c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
                     </span>
                   </td>
                 </tr>
